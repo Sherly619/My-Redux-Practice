@@ -1,12 +1,14 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 import postsReducer from '../features/posts/postsSlice';
+import usersReducer from '../features/users/usersSlice';
+import notificationReducer from '../features/notification/notificationSlice';
 
 export const store = configureStore({
   reducer: {
     posts: postsReducer,
+    users: usersReducer,
+    notification: notificationReducer
   },
 });
 
-const state = store.getState();
-// export type RootState = ReturnType<typeof store.getState>;
-export type RootState = typeof state;
+export type RootState = ReturnType<typeof store.getState>;

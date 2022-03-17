@@ -1,0 +1,10 @@
+.user-list {
+  padding: 1em;
+  .user-link {
+    display: block;
+    color: #000;
+    &:hover {
+      color: purple;
+    }
+  }
+}

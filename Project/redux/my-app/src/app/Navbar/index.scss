@@ -1,0 +1,79 @@
+.navbar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    color: white;
+    margin: 0;
+    padding: 0 1em;
+    background-color: rgb(114, 44, 146);
+    height: 6em;
+
+    h1 {
+        flex: 3;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .nav-info {
+        flex: 2;
+        align-self: stretch;
+        display: flex;
+        font-weight: 700;
+
+        .nav-child {
+            background-color: rgb(95, 29, 95);
+            border-radius: 3px;
+            margin: 0 .2em;
+            padding: .2em 0;
+            display: flex;
+            justify-content: center;
+            
+            &:hover {
+                background-color: rgb(129, 40, 129);
+                text-decoration: underline;
+            }
+        }
+
+        .post-link {
+            margin-left: 0;
+            flex: 1;
+            
+        }
+    
+        .users-link {
+            flex: 1;
+        }
+    
+        .notifications-link {
+            flex: 2;
+            margin-right: 0;
+        }
+
+        .Refresh-button {
+            flex: 6;
+            display: flex;
+            justify-content: right;
+            padding: 0 0 .3em;
+
+            button {
+                padding: 0 .5em;
+                background-color: rgb(44, 89, 211);
+                color: white;
+                font-weight: 700;
+                border: none;
+                border-radius: .2em;
+
+                &:hover {
+                    background-color: rgb(34, 69, 165);
+                }
+            }
+        }
+    }
+    
+    a {
+        color: white;
+    }
+
+    
+}

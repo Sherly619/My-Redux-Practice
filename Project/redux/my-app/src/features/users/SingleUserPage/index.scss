@@ -1,0 +1,9 @@
+.single-user {
+  padding: 1em;
+  .user-post-link {
+    color: #000;
+    &:hover {
+      color: purple;
+    }
+  }
+}

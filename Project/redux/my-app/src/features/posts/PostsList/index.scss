@@ -1,0 +1,19 @@
+.posts-list {
+    text-align: left;
+    padding: 1em;
+
+    .post-excerpt {
+        border: 1px solid rgb(145, 142, 142);
+        border-radius: .5em;
+        margin: .5em 0; 
+        padding: .3em;
+
+        h3 {
+            margin-bottom: .5em;
+        }
+
+        p {
+            margin: .5em 0;
+        }
+    }
+}

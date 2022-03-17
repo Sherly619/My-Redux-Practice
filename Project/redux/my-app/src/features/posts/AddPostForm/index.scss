@@ -1,0 +1,45 @@
+.add-post-form {
+    padding: 1em;
+
+    .post-div {
+        margin: .5em 0;
+        display: flex;
+        flex-direction: column;
+        label {
+            margin: .5em 0;
+        }
+        
+        .input {
+            outline: none;
+            border: 1px solid grey;
+            border-radius: .5em;
+            padding: .3em;
+            &:focus {
+                border: 1px solid purple;
+
+            }
+        }
+    }
+
+    .post-content {
+        textarea {
+            resize: none;
+        }
+    }
+    
+    button {
+        margin: .5em 0;
+        padding: .5em 1em;
+        background-color: rgb(44, 89, 211);
+        border: none;
+        border-radius: .3em;
+        color: white;
+
+        &:disabled {
+            background-color: rgb(90, 122, 209);
+        }
+        &:enabled:hover {
+            background-color: rgb(34, 69, 165);
+        }
+    }
+}

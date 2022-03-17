@@ -1,0 +1,22 @@
+.single-post-page {
+    padding: 1em;
+
+    div {
+        margin: 1em 0;
+    }
+
+    button {
+        padding: .4em .8em;
+        background-color: rgb(44, 89, 211);
+        border: none;
+        border-radius: .2em;
+
+        a {
+            color: white;
+        }
+
+        &:hover {
+            background-color: rgb(34, 69, 165);
+        }
+    }
+}
