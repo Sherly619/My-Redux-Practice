@@ -1,16 +1,11 @@
-import React,{ useEffect, useState } from "react";
+import * as React from 'react';
+import { useEffect, useState, ChangeEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectAllUsers } from "../../users/usersSlice";
 
 import { addNewPost } from "../postsSlice";
 
 import './index.scss';
-
-export type EventType = {
-  target: {
-      value: string;
-  }
-};
 
 export const AddPostForm = () => {
   const [title, setTitle] = useState('');
@@ -22,15 +17,15 @@ export const AddPostForm = () => {
   const dispatch = useDispatch();
   const users = useSelector(selectAllUsers);
 
-  const onTitleChange = (e: EventType) => {
+  const onTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
-  }
-  const onContentChange = (e: EventType) => {
-    setContent(e.target.value);
-  }
-  const onAuthorChange = (e: EventType) => {
+  };
+  const onAuthorChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setUserId(e.target.value);
-  }
+  };
+  const onContentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setContent(e.target.value);
+  };
 
   useEffect(() => {
     setCanSave([title.trim(), content.trim(), userId].every(Boolean) && !addRequestStatus);
