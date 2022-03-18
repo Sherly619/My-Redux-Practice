@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import * as React from "react";
+import  { useState, ChangeEvent } from 'react';
 import { useParams, useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
-import { EventType } from "../AddPostForm";
 import { postUpdated, selectPostById } from "../postsSlice";
 
 import './index.scss';
@@ -20,8 +20,8 @@ export const EditPostForm = () => {
     
     if (!postId) return (<></>);
     
-    const onTitleChange = (e: EventType) => setTitle(e.target.value);
-    const onContentChange = (e: EventType) => setContent(e.target.value);
+    const onTitleChange = (e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value);
+    const onContentChange = (e: ChangeEvent<HTMLTextAreaElement>) => setContent(e.target.value);
 
     const onSavePostClick = () => {
         if(title?.trim() && content?.trim()) {
