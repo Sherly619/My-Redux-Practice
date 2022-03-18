@@ -1,6 +1,6 @@
 import React,{ useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../app/store";
+import { selectAllUsers } from "../../users/usersSlice";
 
 import { addNewPost } from "../postsSlice";
 
@@ -20,7 +20,7 @@ export const AddPostForm = () => {
   const [addRequestStatus, setAddRequestStatus] = useState(false);
 
   const dispatch = useDispatch();
-  const users = useSelector((state: RootState) => state.users);
+  const users = useSelector(selectAllUsers);
 
   const onTitleChange = (e: EventType) => {
     setTitle(e.target.value);

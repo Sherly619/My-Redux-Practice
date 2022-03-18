@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createEntityAdapter, createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { clientApi } from "../../api/client";
 import { RootState } from "../../app/store";
 
@@ -18,7 +18,7 @@ export interface InitItem {
     user: string;
 };
 
-export interface ItemState {
+export interface PostState {
     id: string;
     date: string;
     title: string;
@@ -27,25 +27,23 @@ export interface ItemState {
     reactions: Reactions;
 };
 
-export type ItemsState = Array<ItemState>;
+export type PostsState = Array<PostState>;
 
 export type postStatus = 'idle' | 'loading' | 'succeeded' | 'failed';
 export type error = string | null;
 
-export interface PostsState {
-    items: ItemsState;
-    status: postStatus;
-    error: error
-};
+const postsAdapter = createEntityAdapter<PostState>({
+    sortComparer: (a, b) => b.date.localeCompare(a.date)
+});
 
-export const initialState: PostsState = {
-    items: [],
-    status: 'idle',
-    error: null
-};
+export const initialState = postsAdapter.getInitialState({
+    status: 'idle' as postStatus,
+    error: null as error
+})
+
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
-    const response = await clientApi.get('/fakeApi/posts');
-    return response.data;
+    const response = await clientApi.get('GET_POSTS');
+    return response.data as PostsState;
 });
 
 export const addNewPost = createAsyncThunk('posts/addNewPost', async (initialPost: InitItem) => {
@@ -53,15 +51,26 @@ export const addNewPost = createAsyncThunk('posts/addNewPost', async (initialPos
     return response.data;
 });
 
+type UpdatedPayload = {
+    id: string;
+    title: string;
+    content: string
+};
+
+type ReactionAddedPayload = {
+    id: string;
+    reaction: ReactionsType;
+}
+
 // 处理posts的reducer，通过createSlice创建
 const postsSlice = createSlice({
     name: 'posts',
     initialState,
     reducers: {
         postUpdated: {
-            reducer(state, action) {
+            reducer(state, action: PayloadAction<UpdatedPayload>) {
                 const { id, title, content } = action.payload;
-                const existingPost = state.items.find(post => post.id === id);
+                const existingPost = state.entities[id];
                 if(existingPost) {
                     existingPost.date = new Date().toISOString();
                     existingPost.title = title;
@@ -81,9 +90,9 @@ const postsSlice = createSlice({
             }
         },
         reactionAdded: {
-            reducer(state, action) {
-                const { id, reaction }: { id: string, reaction: ReactionsType } = action.payload;
-                const existingPost = state.items.find(post => post.id === id);
+            reducer(state, action: PayloadAction<ReactionAddedPayload>) {
+                const { id, reaction } = action.payload;
+                const existingPost = state.entities[id];
                 if(existingPost) {
                     existingPost.reactions[reaction]++;
                 }
@@ -102,19 +111,19 @@ const postsSlice = createSlice({
     },
     extraReducers(builder) {
         builder
-            .addCase(fetchPosts.pending, (state, action) => {
+            .addCase(fetchPosts.pending, (state, _action) => {
                 state.status = 'loading';
             })
-            .addCase(fetchPosts.fulfilled, (state, action) => {
+            .addCase(fetchPosts.fulfilled, (state, action: PayloadAction<PostsState>) => {
                 state.status = 'succeeded';
-                state.items = state.items.concat(action.payload);
+                postsAdapter.upsertMany(state, action.payload);
             })
             .addCase(fetchPosts.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = (action.error.message) as string ;
             })
-            .addCase(addNewPost.fulfilled, (state, action) => {
-                state.items.push(action.payload);
+            .addCase(addNewPost.fulfilled, (state, action: PayloadAction<PostState>) => {
+                postsAdapter.addOne(state, action.payload);
             })
     }
 });
@@ -123,13 +132,18 @@ export const { postUpdated, reactionAdded } = postsSlice.actions;
 
 export default postsSlice.reducer;
 
-export const selectAllPosts = (state: RootState) => state.posts;
+export const selectPostStatus = (state: RootState) => state.posts.status;
 
-export const selectPostById = (state: RootState, postId: string) => 
-    state.posts.items.find(post => post.id === postId);
+export const selectPostError = (state: RootState) => state.posts.error;
+
+export const {
+    selectAll: selectAllPosts,
+    selectById: selectPostById,
+    selectIds: selectPostIds
+} = postsAdapter.getSelectors((state: RootState) => state.posts);
 
 export const selectPostsByUser = createSelector(
-    [selectAllPosts, (state: RootState, userId: string) => userId], 
-    (posts: PostsState, userId: string) => posts.items.filter(post => post.user === userId)
+    [selectAllPosts, (_state: RootState, userId: string) => userId], 
+    (posts: PostsState, userId: string) => posts.filter(post => post.user === userId)
 );
 

@@ -1,7 +1,6 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { RootState } from "../../../app/store";
-import { ItemState, reactionAdded, Reactions, ReactionsType } from "../postsSlice";
+import { PostState, reactionAdded, ReactionsType } from "../postsSlice";
 
 import './index.scss';
 
@@ -13,7 +12,7 @@ const reactionEmoji = {
     eyes: '👀'
 };
 
-export const ReactionButtons = ({ reactions, id }: ItemState) => {
+export const ReactionButtons = ({ reactions, id }: PostState) => {
     const dispatch = useDispatch();
     const onButtonClick = (name: ReactionsType) => {
         dispatch(reactionAdded(id, name));

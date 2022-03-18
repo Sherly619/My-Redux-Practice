@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAllUsers } from '../../users/usersSlice';
-import { fetchNotifications, selectAllNotifications } from '../notificationSlice';
+import { fetchNotifications, selectAllNotifications, selectNotificationMsg, selectNotificationStatus } from '../notificationSlice';
 
 import './index.scss';
 
@@ -17,16 +17,18 @@ export function NotificationList () {
   const dispatch = useDispatch()
   
   const notifications = useSelector(selectAllNotifications);
+  const notificationStatus = useSelector(selectNotificationStatus);
+  const notificationMsg = useSelector(selectNotificationMsg);
   const users = useSelector(selectAllUsers);
   useEffect(() => {
-    if (notifications.status === 'pending') {
+    if (notificationStatus === 'pending') {
       dispatch(fetchNotifications());
     }
-  }, [notifications.status, dispatch]);
+  }, [notificationStatus, dispatch]);
 
   const renderNotice = () => {
-    if (notifications.status !== 'fulfilled') return <>{notifications.msg}</>;
-    return notifications.data.map(notification => {
+    if (notificationStatus !== 'fulfilled') return <>{notificationMsg}</>;
+    return notifications.map(notification => {
       const date = parseISO(notification.date);
       const timeAgo = formatDistanceToNow(date);
       const currentUser = users.find(user => user.id === notification.user);

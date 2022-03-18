@@ -10,8 +10,13 @@ import { UserList } from './features/users/UserList';
 import './App.css';
 import { SingleUserPage } from './features/users/SingleUserPage';
 import { NotificationList } from './features/notification/NotificationList';
+import { useDispatch } from 'react-redux';
+import { fetchUsers } from './features/users/usersSlice';
 
 const App = () => {
+  const dispatch = useDispatch();
+  dispatch(fetchUsers());
+
   return (
     <Router>
       <div className="App">

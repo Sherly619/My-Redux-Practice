@@ -1,21 +1,21 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../app/store";
 import { Link } from "react-router-dom";
 import { PostAuthor } from "../../users/PostAuthor";
 import { TimeAgo } from "../TimeAgo";
 import { ReactionButtons } from "../ReactionButtons";
-import { fetchPosts, postStatus, selectAllPosts } from "../postsSlice";
+import { fetchPosts, postStatus, selectAllPosts, selectPostError, selectPostStatus } from "../postsSlice";
 import { Spinner } from "../../../app/Spinner";
+import { RootState } from "../../../app/store";
 
 import './index.scss';
 
 export const PostsList = () => {
     const dispatch = useDispatch();
 
-    const posts = useSelector(selectAllPosts);
-    const postStatus = posts.status;
-    const error = posts.error;
+    const orderedPosts = useSelector(selectAllPosts);
+    const postStatus = useSelector((state: RootState) => selectPostStatus(state));
+    const error = useSelector((state: RootState) => selectPostError(state));
 
     useEffect(() => {
         if(postStatus === 'idle') {
@@ -23,7 +23,6 @@ export const PostsList = () => {
         }
     }, [postStatus, dispatch]);
 
-    const orderedPosts = posts.items.slice().sort((a, b) => b.date.localeCompare(a.date));
     const getPostList = (status: postStatus) => {
         if(status === 'loading') {
             return (
