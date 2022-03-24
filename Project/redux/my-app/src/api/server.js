@@ -19,10 +19,6 @@ app.use((req, res, next) => {
   next();
 });
   
-// app.all('', (req, res) => {
-//   res.setHeader('Access-Control-Allow-Headers', '*');
-//   res.setHeader('Access-Control-Allow-Origin', '*');
-// });
 const posts = [
   { id: '1', date: new Date().toISOString(), title: 'First Post!', content: 'Hello!', user: '1', reactions: Object.assign({}, reactions) },
   { id: '2', date: new Date().toISOString(), title: 'Second Post!', content: 'More text!', user: '2', reactions: Object.assign({}, reactions) },
@@ -34,19 +30,27 @@ const notifications = [
   { id: '2', date: new Date().toISOString(), user: '0', content: 'Glad to be friend!', action: '2' }
 ];
 
+app.use(express.json()) // for parsing application/json
+app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+
 app.get('/fakeApi/getPosts', (req, res) => {
   res.send(posts);
+});
+
+app.get('/fakeApi/getPost/:postId', (req, res) => {
+  res.send(posts.find(post => post.id === req.params.postId));
 });
 
 app.get('/fakeApi/getNotifications', (req, res) => {
   res.send(notifications);
 });
 
-app.post('/fakeApi/addPost', (req, res) => {
+app.post('/fakeApi/addPost', (req, res, next) => {
   const newPost = req.body;
   posts.push(newPost);
+  res.send({status: "complete"});
 })
 
 app.listen(port, () => {
-  console.log('Server start');
+  console.log("Server start");
 })

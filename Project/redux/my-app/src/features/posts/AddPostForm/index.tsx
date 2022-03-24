@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { useEffect, useState, ChangeEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useAddPostMutation } from '../../api/apiSlice';
 import { selectAllUsers } from "../../users/usersSlice";
-
-import { addNewPost } from "../postsSlice";
 
 import './index.scss';
 
@@ -11,10 +10,9 @@ export const AddPostForm = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [userId, setUserId] = useState('');
-  const [canSave, setCanSave] = useState(false);
-  const [addRequestStatus, setAddRequestStatus] = useState(false);
 
-  const dispatch = useDispatch();
+  const [addPostMutation, { isLoading }] = useAddPostMutation();
+
   const users = useSelector(selectAllUsers);
 
   const onTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -27,23 +25,17 @@ export const AddPostForm = () => {
     setContent(e.target.value);
   };
 
-  useEffect(() => {
-    setCanSave([title.trim(), content.trim(), userId].every(Boolean) && !addRequestStatus);
-  }, [title, content, userId, addRequestStatus]);
+  const canSave = [title, content, userId].every(Boolean) && !isLoading
 
-  const onSavePostClick = () => {
+  const onSavePostClick = async () => {
     if(canSave) {
-      // 通过dispatch保存状态
       try {
-        dispatch(addNewPost({ title, content, user: userId })); 
+        await addPostMutation({ title, content, user: userId })
         setTitle('');
         setContent('');
         setUserId('');
-        setAddRequestStatus(true);
-      } catch (err) {
+      } catch(err) {
         console.log(err);
-      } finally {
-        setAddRequestStatus(false);
       }
     }
   };
