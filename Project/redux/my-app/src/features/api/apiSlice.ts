@@ -1,7 +1,7 @@
 import { nanoid } from '@reduxjs/toolkit';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { reactions } from '../../api/client';
-import { InitItem, PostsState, PostState } from '../posts/postsSlice';
+import { EditPost, InitItem, PostsState, PostState } from '../posts/postsSlice';
 
 export const apiSlice = createApi({
   reducerPath: 'api',
@@ -10,7 +10,7 @@ export const apiSlice = createApi({
   endpoints: builder => ({
     getPosts: builder.query<PostsState, void>({
       query: () => ({ url: '/getPosts'}),
-      providesTags: (result) => 
+      providesTags: (result) =>
         result ?
         [
           ...result.map(post => ({ type: 'Post' as const, id: post.id})),
@@ -20,9 +20,9 @@ export const apiSlice = createApi({
     }),
     getPost: builder.query<PostState, string>({
       query: postId => ({url: `/getPost/${postId}`}),
-      providesTags: (result, error, id) => [{ type: 'Post', id }]
+      providesTags: (_result, _error, arg) => [{ type: 'Post', arg }]
     }),
-    addPost: builder.mutation<string, InitItem>({
+    addPost: builder.mutation<void, InitItem>({
       query: item => {
         const newPost = {
           id: nanoid(),
@@ -36,13 +36,22 @@ export const apiSlice = createApi({
           body: newPost
         }
       },
-      invalidatesTags: (result, error, arg) => [{ type: 'Post', id: 'LIST'}]
+      invalidatesTags: (_result, _error, _arg) => [{ type: 'Post', id: 'LIST' }],
     }),
+    editPost: builder.mutation<void, EditPost>({
+      query: item => ({
+        url: '/editPost',
+        method: 'POST',
+        body: item
+      }),
+      invalidatesTags: (_result, _error, arg) => [{ type: 'Post', id: arg.id}]
+    })
   })
 });
 
 export const { 
   useGetPostsQuery, 
   useGetPostQuery,
-  useAddPostMutation
+  useAddPostMutation,
+  useEditPostMutation
 } = apiSlice;

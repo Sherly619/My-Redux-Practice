@@ -18,7 +18,7 @@ export const PostsList = () => {
     error,
     refetch
   } = useGetPostsQuery();
-  console.log(posts,isLoading,isFetching)
+
   const orderedPosts = React.useMemo(() => {
     if (!posts) return posts;
     const postsCopy = [...posts];

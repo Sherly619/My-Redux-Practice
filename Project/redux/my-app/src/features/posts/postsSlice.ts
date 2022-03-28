@@ -18,6 +18,12 @@ export interface InitItem {
   user: string;
 };
 
+export interface EditPost {
+  id: string;
+  title: string;
+  content: string;
+}
+
 export interface PostState {
   id: string;
   date: string;

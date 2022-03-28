@@ -6,17 +6,17 @@ import { AddPostForm } from './features/posts/AddPostForm';
 import { SinglePostPage } from './features/posts/SinglePostPage';
 import { EditPostForm } from './features/posts/EditPostForm';
 import { UserList } from './features/users/UserList';
-
-import './App.css';
 import { SingleUserPage } from './features/users/SingleUserPage';
 import { NotificationList } from './features/notification/NotificationList';
+
+import './App.css';
 import { useDispatch } from 'react-redux';
-import { fetchUsers } from './features/users/usersSlice';
+import { extendedApiSlice } from './features/users/usersSlice';
 
 const App = () => {
-  const dispatch = useDispatch();
-  dispatch(fetchUsers());
-
+  const dispatch = useDispatch()
+  dispatch(extendedApiSlice.endpoints.getUsers.initiate())
+  
   return (
     <Router>
       <div className="App">

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { useEffect, useState, ChangeEvent } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState, ChangeEvent } from "react";
+import {  useSelector } from "react-redux";
 import { useAddPostMutation } from '../../api/apiSlice';
 import { selectAllUsers } from "../../users/usersSlice";
 
